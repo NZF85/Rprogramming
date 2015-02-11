@@ -31,11 +31,11 @@ rankall <- function(outcome, num = "best") {
     ##since the coercion of data didnt happen in the data set, it still contains the "not available" status
     sorted_data <- sorted_data[!sorted_data[,header_name] == "Not Available",]
     if (num == "best") {
-      ranked_hosp <- best(state, outcome)
+      ranked_hosp <- sorted_data[,"Hospital.Name"][1:370]
     } else if (num == "worst") {
-      ranked_hosp <- as.character(tail(sorted_data[,"Hospital.Name"]))
+      ranked_hosp <- as.character(tail(sorted_data[,"Hospital.Name"][1:370]))
     } else {
-      ranked_hosp <- as.character(sorted_data[,"Hospital.Name"][num])
+      ranked_hosp <- as.character(sorted_data[,"Hospital.Name"][num:370])
     }
     hosps <- c(hosps, ranked_hosp)
   }
