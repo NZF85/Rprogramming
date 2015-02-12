@@ -4,8 +4,9 @@ rankall <- function(outcome, num = "best") {
   file_data <- read.csv("outcome-of-care-measures.csv", sep = ",")
   
   ## Checks that state and outcome are valid
+  unordered_states<-file_data$State[!duplicated(file_data$State)]
+  valid_states<-unordered_states[order(unordered_states)]
   ##valid_states <- c("AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY")
-  valid_states<-file_data$State[!duplicated(file_data$State)]
   valid_outcomes <- c("heart attack", "heart failure", "pneumonia")
   if (!is.element(outcome, valid_outcomes)) stop("invalid outcome")
   
@@ -29,12 +30,16 @@ rankall <- function(outcome, num = "best") {
     ##, then pulls the values
     ##for the header_name plus the hospital name into sorted_data
     sorted_data <- data[order(as.numeric(as.character(data[,header_name])), as.character(data[,"Hospital.Name"])),]
+    
+    
+      
     ##since the coercion of data didnt happen in the data set, it still contains the "not available" status
     sorted_data <- sorted_data[!sorted_data[,header_name] == "Not Available",]
+    p<-as.numeric(nrow(sorted_data))
     if (num == "best") {
-      ranked_hosp <- sorted_data[,"Hospital.Name"][1]
+      ranked_hosp <- as.character(sorted_data[,"Hospital.Name"][1])
     } else if (num == "worst") {
-      ranked_hosp <- as.character(tail(sorted_data[,"Hospital.Name"][1]))
+      ranked_hosp <- as.character((sorted_data[,"Hospital.Name"][nrow(sorted_data)]))
     } else {
       ranked_hosp <- as.character(sorted_data[,"Hospital.Name"][num])
     }
